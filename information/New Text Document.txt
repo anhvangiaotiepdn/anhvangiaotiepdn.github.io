@@ -1,0 +1,6 @@
+English pronunciation
+
+	-https://www.wordsapi.com/
+	-http://developer.wordnik.com/#!/libraries#javascript-swagger
+	-http://developer.pearson.com/apis/dictionaries
+	-http://developer.pearson.com/apis/dictionaries
