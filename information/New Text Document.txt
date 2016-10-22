@@ -4,3 +4,5 @@ English pronunciation
 	-http://developer.wordnik.com/#!/libraries#javascript-swagger
 	-http://developer.pearson.com/apis/dictionaries
 	-http://developer.pearson.com/apis/dictionaries
+
+https://help.github.com/articles/adding-or-removing-a-custom-domain-for-your-github-pages-site/
