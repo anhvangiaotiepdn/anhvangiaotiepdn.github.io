@@ -1,7 +1,7 @@
 /*
 * method of pronunciation tool
 */
-var URL_DEFAULT = "http://api.pearson.com/v2/dictionaries/ldoce5/entries?limit=1&headword=";
+var URL_DEFAULT = "https://api.pearson.com/v2/dictionaries/ldoce5/entries?limit=1&headword=";
 var SPLIT_CHARACTER = "  ";
 function onClickBtnConvert(thiz) {
   var text = $(thiz).parents("div.panel").find("#txtSourceText").val().trim();
