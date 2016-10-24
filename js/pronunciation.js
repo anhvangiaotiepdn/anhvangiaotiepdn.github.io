@@ -9,6 +9,9 @@ function onClickBtnConvert(thiz) {
   var resultTranslate;
   if(arrWord != undefined && arrWord.length > 0){
     resultTranslate = translateArrayWord(arrWord);
+  }else{
+    alert("Bạn phải nhập nội dung cần dịch");
+    return;
   }
   var panelBritish = $(thiz).parents("div.container").find("#resultBritish");
   var panelAmerican = $(thiz).parents("div.container").find("#resultAmerican");
