@@ -7,7 +7,7 @@ var app_id = "10b95698";
 var app_key = "b106b0098f5ba4be92a7f259021598bf";
 
 var SPLIT_CHARACTER = "  ";
-function onClickBtnConvert(thiz) {
+function onClickBtnConvert2(thiz) {
   var text = $(thiz).parents("div.panel").find("#txtSourceText").val().trim();
   var arrWord = splitWordFromSentence(text);
   var resultTranslate;
@@ -18,18 +18,33 @@ function onClickBtnConvert(thiz) {
     return;
   }
   var panelBritish = $(thiz).parents("div.container").find("#resultBritish");
-  var panelAmerican = $(thiz).parents("div.container").find("#resultAmerican");
   // bind value
   if(resultTranslate != undefined && resultTranslate.arrBritish.length >0){
     panelBritish.text(resultTranslate.arrBritish);
   }else{
     panelBritish.text("");
   }
-  if(resultTranslate != undefined && resultTranslate.arrAmerican.length >0){
-    panelAmerican.text(resultTranslate.arrAmerican);
-  }else{
-    panelAmerican.text("");
+}
+
+var settings = {
+  "async": true,
+  "crossDomain": true,
+  "url": "https://od-api.oxforddictionaries.com/api/v1/entries/en/hello",
+  "method": "GET",
+  "headers": {
+    "app_id": "10b95698",
+    "app_key": "b106b0098f5ba4be92a7f259021598bf",
+    "cache-control": "no-cache",
+    "postman-token": "9c0a53b2-fcea-19d5-6886-01e167481b48"
   }
+}
+
+
+
+function onClickBtnConvert(thiz) {
+  $.ajax(settings).done(function (response) {
+    console.log(response);
+  });
 }
 
 function splitWordFromSentence(sourceText){
@@ -39,50 +54,53 @@ function splitWordFromSentence(sourceText){
 
 function translateArrayWord(arrWord){
   var strBritish = "";
-  var strAmerican = "";
   arrWord.forEach(function (value, i) {
     var item = translateAWord(value);
     strBritish += item.british + SPLIT_CHARACTER;
-    strAmerican += item.american + SPLIT_CHARACTER;
   });
   var result = new Object();
   result.arrBritish = strBritish;
-  result.arrAmerican = strAmerican;
   return result;
 }
 
+function logResults(json){
+  console.log(json);
+}
+
 function translateAWord(text){
-  var urlApi = URL_DEFAULT + text.trim();
+  var urlApi = URL_OXFORD_DEFAULT + text.trim();
   var british = text.trim();
-  var american = text.trim();
   var item ;
-  $.ajax({async: false,url: urlApi, success: function(result){
-        item = parsePronunciation(result,text);
-    }});
+  var contentType ="application/x-www-form-urlencoded; charset=utf-8";
+  if(window.XDomainRequest) //for IE8,IE9
+    contentType = "text/plain";
+  $.get({async: false,url: urlApi,
+      type:"GET",
+      headers: {
+        'app_id':app_id,
+        'app_key':app_key,
+        'Access-Control-Allow-Origin' : '*'
+      },
+      //dataType:"json",
+      crossDomain: true,
+      dataType: 'jsonp',
+      //contentType:contentType,
+      //success: function(result){
+        //item = parsePronunciation(result,text);
+  //  }
+    jsonpCallback: "logResults"
+  });
   if(item == undefined){
     item = new Object();
     item.british = british;
-    item.american = american;
   }
   return item;
 }
 
 function parsePronunciation(result,source){
   var british = source;
-  var american = source;
-  if(result.count >0){
-    var item = result.results[0];
-    if(item.pronunciations != undefined){
-      if(item.pronunciations.length > 0){
-        british = item.pronunciations[0].ipa;
-        if(item.pronunciations.length > 1){
-          american = item.pronunciations[1].ipa;
-        }
-      }
-    }
-  }
+  british = result.results[0].lexicalEntries[result.results[0].lexicalEntries.length -1].pronunciations[0].phoneticSpelling;
   var returnItem = new Object();
   returnItem.british = british;
-  returnItem.american = american;
   return returnItem;
 }
