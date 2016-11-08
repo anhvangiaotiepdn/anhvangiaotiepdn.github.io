@@ -8,6 +8,7 @@ var app_key = "b106b0098f5ba4be92a7f259021598bf";
 
 var SPLIT_CHARACTER = "  ";
 function onClickBtnConvert(thiz) {
+  $(thiz).hide();
   var text = $(thiz).parents("div.panel").find("#txtSourceText").val().trim();
   var arrWord = splitWordFromSentence(text);
   var resultTranslate;
@@ -15,6 +16,7 @@ function onClickBtnConvert(thiz) {
     resultTranslate = translateArrayWord(arrWord);
   }else{
     alert("Bạn phải nhập nội dung cần dịch");
+    $(thiz).show();
     return;
   }
   var panelBritish = $(thiz).parents("div.container").find("#resultBritish");
@@ -30,6 +32,7 @@ function onClickBtnConvert(thiz) {
   }else{
     panelAmerican.text("");
   }
+  $(thiz).show();
 }
 
 function splitWordFromSentence(sourceText){
@@ -68,15 +71,15 @@ function translateAWord(text){
 }
 
 function parsePronunciation(result,source){
-  var british = source;
-  var american = source;
+  var british = "["+source+"]";
+  var american = "["+source+"]";
   if(result.count >0){
     var item = result.results[0];
     if(item.pronunciations != undefined){
       if(item.pronunciations.length > 0){
-        british = item.pronunciations[0].ipa;
+        british = getFirstWord(item.pronunciations[0].ipa);
         if(item.pronunciations.length > 1){
-          american = item.pronunciations[1].ipa;
+          american = getFirstWord(item.pronunciations[1].ipa);
         }
       }
     }
@@ -85,4 +88,13 @@ function parsePronunciation(result,source){
   returnItem.british = british;
   returnItem.american = american;
   return returnItem;
+}
+
+function getFirstWord(words){
+  var item = "";
+  if(words != undefined){
+    res = words.split(",");
+    item = res[0];
+  }
+  return item;
 }
